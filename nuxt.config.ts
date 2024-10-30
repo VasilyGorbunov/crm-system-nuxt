@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     modules: [
         '@nuxt/image',
         '@nuxtjs/tailwindcss',
+        'nuxt-icon',
         'shadcn-nuxt',
         [
             '@nuxtjs/google-fonts',
