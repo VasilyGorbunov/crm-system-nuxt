@@ -12,7 +12,7 @@ export function useKanbanQuery() {
         select(data) {
             const newBoard = [...KANBAN_DATA];
             const deals = data.documents as IDeal[];
-            console.log('useQuery',data, deals, newBoard);
+
         },
     });
 }
