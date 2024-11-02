@@ -15,8 +15,39 @@ interface IDealFormState extends Pick<IDeal, 'name' | 'price'> {
 }
 
 const props = defineProps({
-
+  status: {
+    type: String,
+    default: '',
+    required: true
+  },
+  refetch: {
+    type: Function,
+    required: true
+  }
 })
+
+const {handleSubmit, defineField, handleReset} = useForm<IDealFormState>({
+  initialValues: {
+    status: props.status
+  }
+})
+
+const [name, nameAttrs] = defineField('name')
+const [price, priceAttrs] = defineField('price')
+const [customerEmail, customerEmailAttrs] = defineField('customer.email')
+const [customerName, customerNameAttrs] = defineField('customer.name')
+
+const {mutate, isPending} = useMutation({
+  mutationKey: ['create a new deal'],
+  mutationFn: (data: IDealFormState) => DB.createDocument(DB_ID, COLLECTION_DEALS, uuidv4(), data),
+  onSuccess() {
+      props.refetch && props.refetch();
+      handleReset();
+  },
+})
+
+const onSubmit = handleSubmit(values => mutate(values));
+
 </script>
 
 <template>
@@ -25,17 +56,43 @@ const props = defineProps({
       <Icon v-if="isOpenForm"
             name="material-symbols:arrow-upward-alt"
             class="fade-in-100 fade-out-0"
-            size="25"
+            size="30"
       />
       <Icon v-else
             name="mdi:plus-circle-outline"
             class="fade-in-100 fade-out-0"
-            size="25"
+            size="30"
       />
     </button>
   </div>
-  <form>
-
+  <form v-if="isOpenForm" @submit.prevent="onSubmit" class="form">
+    <UiInput placeholder="Наименование"
+             v-model="name"
+             v-bind="nameAttrs"
+             type="text"
+             class="input"
+    />
+    <UiInput placeholder="Сумма"
+             v-model="price"
+             v-bind="priceAttrs"
+             type="text"
+             class="input"
+    />
+    <UiInput placeholder="Email"
+             v-model="customerEmail"
+             v-bind="customerEmailAttrs"
+             type="text"
+             class="input"
+    />
+    <UiInput placeholder="Компания"
+             v-model="customerName"
+             v-bind="customerNameAttrs"
+             type="text"
+             class="input"
+    />
+    <button class="btn" :disabled="isPending">
+      {{ isPending ? 'Загрузка...' : 'Добавить'}}
+    </button>
   </form>
 </template>
 
