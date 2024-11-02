@@ -11,7 +11,7 @@ export function useKanbanQuery() {
         queryFn: () => DB.listDocuments(DB_ID, COLLECTION_DEALS),
         select(data) {
             const newBoard = [...KANBAN_DATA];
-            const deals = data.documents as IDeal[];
+            const deals = data.documents as unknown as IDeal[];
 
             for(const deal of deals) {
                 const column = newBoard.find(col => col.id === deal.status)
