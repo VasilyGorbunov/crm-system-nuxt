@@ -75,7 +75,7 @@ const onSubmit = handleSubmit(values => mutate(values));
     <UiInput placeholder="Сумма"
              v-model="price"
              v-bind="priceAttrs"
-             type="text"
+             type="number"
              class="input"
     />
     <UiInput placeholder="Email"
